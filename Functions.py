@@ -466,14 +466,14 @@ def Fluence(L, d_prime, d, rho_matter, rho_bkg, BkgElements, BkgAtoms, MoleculeE
     """
     M_molec_matter = Molar_mass(MoleculeElements, MoleculeAtoms) #[g/molecules]
     M_molec_bkg = Molar_mass(BkgElements, BkgAtoms) #[g/molecules]
-    
+
     Sigma_Mass_Omega_matter = Sigma_Mass_Omega(Sigma_matter, Ageometric_matter, Effi_matter, M_molec_matter) 
     Sigma_Mass_Omega_bkg = Sigma_Mass_Omega(Sigma_bkg, Ageometric_bkg, Effi_bkg, M_molec_bkg) 
-    
+
     #that is the minimun fluence
-    fluence = 25.0 * (2.0 * L * Sigma_Mass_Omega_bkg * rho_bkg) / (d**2 * d_prime**2 * (Sigma_Mass_Omega_matter * rho_matter - Sigma_Mass_Omega_bkg * rho_bkg)**2.0)
+    #fluence = 25.0 * (2.0 * L * Sigma_Mass_Omega_bkg * rho_bkg) / (d**2 * d_prime**2 * (Sigma_Mass_Omega_matter * rho_matter - Sigma_Mass_Omega_bkg * rho_bkg)**2.0)
     # this is the complete equation without approximations
-    #fluence = 25.0 * (2.0 * Sigma_Mass_Omega_bkg * rho_bkg * (L - d) + Sigma_Mass_Omega_matter * rho_matter * d)/(d**2 * d_prime**2 * (Sigma_Mass_Omega_matter * rho_matter - Sigma_Mass_Omega_bkg * rho_bkg)**2)
+    fluence = 25.0 * (2.0 * Sigma_Mass_Omega_bkg * rho_bkg * (L - d) + Sigma_Mass_Omega_matter * rho_matter * d)/(d**2 * d_prime**2 * (Sigma_Mass_Omega_matter * rho_matter - Sigma_Mass_Omega_bkg * rho_bkg)**2)
     #print('minimun fluence: ', format(fluence*10**(-8), ".5E"), 'particles/mum2$')
     
     return fluence #[particles/cm2]

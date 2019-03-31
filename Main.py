@@ -61,7 +61,7 @@ formula = map(''.join, zip(MoleculeSymbols, map(str, MoleculeAtoms)))
 print(''.join(formula))
 '''
 
-
+'''
 #for example biomolecule-protein
 MoleculeElements = ['Hydrogen', 'Carbon', 'Nitrogen', 'Oxygen', 'Sulfur']
 MoleculeSymbols = ['H', 'C', 'N', 'O', 'S']
@@ -71,9 +71,8 @@ formula = map(''.join, zip(MoleculeSymbols, map(str, MoleculeAtoms)))
 print(''.join(formula))
 rho_matter = 1.35 #Biomolecule
 tag = 'Biomolecule'
-
-
 '''
+
 #for example DNA
 MoleculeElements = ['Hydrogen', 'Carbon', 'Nitrogen', 'Oxygen']
 MoleculeSymbols = ['H', 'C', 'N', 'O']
@@ -83,7 +82,6 @@ formula = map(''.join, zip(MoleculeSymbols, map(str, MoleculeAtoms)))
 print(''.join(formula))
 rho_matter = 1.70 #DNA
 tag = 'DNA'
-'''
 
 '''
 #for example PMMA
@@ -135,7 +133,7 @@ l2_air = l1_air
 #change here the parameters of the detector's size
 a_det = 45.0
 b_det = 100.0
-c_det = 1.0
+c_det = 5.0
 
 #evaluate the beam photons with the line-block's interaction
 #[AirLine_1_Bkg, WaterLine_1_Bkg, CellPhotonsArray, WaterLine_2_Bkg, AirLine_2_Bkg] = DG.GenerateBackgrounds(l1_air, l1_water, l_cell, l2_water, l2_air, n)
@@ -157,7 +155,7 @@ for ind, Element in enumerate(MoleculeElements):
     ArraySinterpolantSmall = np.append(ArraySinterpolantSmall, SinterpolantSmall)
     ArrayFinterpolant = np.append(ArrayFinterpolant, Finterpolant)
 
-'''
+
 [SigmaTotalMolecule, SigmaTotalIncoherentMolecule, SigmaTotalCoherentMolecule, \
             ProbabilityMoleculeElement, ProbabilityIncoherentElement, ProbabilityCoherentElement, \
             ProbabilityIncoherentMolecule, ProbabilityCoherentMolecule] = \
@@ -167,12 +165,12 @@ Fun.PhotonScatteringMoleculeProbabilities(InitEnergy, thetaRad, ArrayZ, ArraySin
 
 [nMoleculeIncoherent, nMoleculeCoherent] = Fun.PhotonScatteringMoleculeNumbers(CellPhotonsArray, ProbabilityIncoherentMolecule, ProbabilityCoherentMolecule)
 [nMoleculeElementIncoherent, nMoleculeElementCoherent] = Fun.PhotonScatteringElementNumbers(nMoleculeIncoherent, nMoleculeCoherent, ProbabilityIncoherentElement, ProbabilityCoherentElement)
-'''
+
 
 '''
 #----------------------------- generate the random events for incoherent and coherent---------------------------------------------------------
 '''
-'''
+
 ThetaAnglesElementIncoherent = np.array([])
 ThetaAnglesElementCoherent = np.array([])
 DiffCrossSectionsElementIncoherent = np.array([])
@@ -194,7 +192,7 @@ for ind, Element in enumerate(MoleculeElements):
     [XR_ElementCoherent, YR_ElementCoherent] = RG.RandomNumberDistribution(ArrayC[1], nMoleculeElementCoherent[ind], InitEnergy, thetaRad, ArrayZ[ind], ArraySinterpolantSmall[ind], ArraySinterpolantBig[ind], ArrayFinterpolant[ind])
     ThetaAnglesElementCoherent = np.concatenate([ThetaAnglesElementCoherent, XR_ElementCoherent])
     DiffCrossSectionsElementCoherent = np.concatenate([DiffCrossSectionsElementCoherent, YR_ElementCoherent])
-'''
+
 
 '''
 #------------------------ plot the cross sections for incoherent and coherent and with random numbers ------------------------------------
@@ -206,7 +204,7 @@ for ind, Element in enumerate(MoleculeElements):
 '''
 #------------------------ Interaction in the detector and its geometry ----------------------------------------
 '''
-'''
+
 #water block dimensions (cm units):
 a_water = 0.001
 b_water = 0.001
@@ -229,7 +227,7 @@ MeasuredPhoton_FinalEnergy_inco = Fun.FinalEnergy(InitEnergy, MeasuredPhoton_XR_
 [Eff_water_inco, Eff_air_inco, A_geo_inco, Eff_det_inco, Eff_tot_inco] = DG.Efficiencies(UpperPhotons_XR_inco, Upper_NoWaterInteract_XR_inco, Upper_NoAirInteract_XR_inco, permitted_XR_inco, MeasuredPhoton_XR_inco)
 ResultsEfficiencies_inco = np.vstack([ResultsEfficiencies_inco, [Eff_water_inco, Eff_air_inco, A_geo_inco, Eff_det_inco, Eff_tot_inco]])
 
-#fig0 = DG.PlotterEfficiencyDistributions(CellPhotonsArray, InitEnergy, UpperPhotons_XR_inco, Upper_NoAirInteract_XR_inco, permitted_XR_inco, MeasuredPhoton_XR_inco)
+fig0 = DG.PlotterEfficiencyDistributions(CellPhotonsArray, InitEnergy, UpperPhotons_XR_inco, Upper_NoAirInteract_XR_inco, permitted_XR_inco, MeasuredPhoton_XR_inco)
     
 #delete the 0 rows due to
 ResultsEfficiencies_inco = ResultsEfficiencies_inco[~np.all(ResultsEfficiencies_inco == 0, axis=1)]
@@ -253,12 +251,12 @@ ResultsEfficiencies_coh = np.vstack([ResultsEfficiencies_coh, [Eff_water_coh, Ef
     
 #delete the 0 rows
 ResultsEfficiencies_coh = ResultsEfficiencies_coh[~np.all(ResultsEfficiencies_coh == 0, axis=1)]
-'''
+
 
 '''
 #----------------------------- Fluence and Dose -----------------------------------------------------------------------
 '''
-
+'''
 #voxel parameters: ¡¡¡Son distintos de los parametros de la celula y agua para evaluar las eficiencias, realmente da igual !!!
 L = 5.0*10**(-4)
 d_prime = 34.0*10**(-7)
@@ -280,23 +278,24 @@ Sigma_bkg = 5.6225453216509171*10**(-24) #total cross section for water [cm2/ato
 
 ############################## DEPENDENCE WITH THE d SIZE INCOHERENT FOR DIFFERENT DETECTORS ################################
 #Ideal Detector // Detector 1: 100*45*5 // Detector 2: 100*45*1 // Detector 3: 50*25*5
-Ageometric_matter_array = np.array([1.0, 0.95, 0.88, 0.70710678118654757])
-Effi_matter_array       = np.array([1.0, 0.91, 0.74, 0.70710678118654757])
-Ageometric_bkg_array    = np.array([1.0, 0.95, 0.878, 0.70710678118654757])
-Effi_bkg_array          = np.array([1.0, 0.895, 0.74, 0.70710678118654757])
-DetectorTag = np.array(['IdealDetector', '100-45-5', '50-25-5', 'fake'])
 
+Ageometric_matter_array = np.array([1.0, 0.95, 0.88])
+Effi_matter_array       = np.array([1.0, 0.91, 0.74])
+Ageometric_bkg_array    = np.array([1.0, 0.95, 0.88])
+Effi_bkg_array          = np.array([1.0, 0.91, 0.74])
 
-darray = np.linspace(1.0*10**(-7), 0.0001, num=10000, endpoint=True) #1 nm to 1000 nm in cm case
+#DetectorTag = np.array(['IdealDetector', '100-45-5', '50-25-5'])
+DetectorTag = np.array(['Ideal', 'Optimistic', 'Realistic'])
+
+darray = np.linspace(1.0*10**(-7), 0.0001, num=1000, endpoint=True) #1 nm to 1000 nm in cm case
         
 #The Init Energy is conStant so only is neccessary to evaluate one time:
 SigmaTotalMatter = Fun.SigmaTotalMatter(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, \
                                         ArraySinterpolantBig, ArrayFinterpolant, CellPhotonsArray, MoleculeAtoms)
 #cell matter parameters using the sigma evaluated previusly
 Sigma_matter = SigmaTotalMatter*10**(-24) #total cross section for cell [cm2/atom]
- 
-for j in range(0, len(Ageometric_matter_array)): 
 
+for j in range(0, len(Ageometric_matter_array)):   
     if (j==0):    
         print('\n')
         print('Doing the loop of Fluence and Dose ...')
@@ -305,8 +304,8 @@ for j in range(0, len(Ageometric_matter_array)):
     data = []
     Fluence_d_array = np.array([])
     DoseGy_d_array = np.array([])
-    for i in range(0, len(darray)):
-        
+    
+    for i in range(0, len(darray)):    
         F = Fun.Fluence(L, darray[i], darray[i], rho_matter, rho_bkg, BkgElements, BkgAtoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter_array[j], Effi_matter_array[j], Sigma_bkg, Ageometric_bkg_array[j], Effi_bkg_array[j])
         Sigma_photo = Fun.PhotoabsorptionSigma(MoleculeElements, MoleculeAtoms, InitEnergy)
         [SigmaTotalIncoherentMoleculeCorrectedEnergy, SigmaTotalCoherentMoleculeCorrectedEnergy] = Fun.PhotonScatteringMoleculeCrossSectionsCorrected(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, ArraySinterpolantBig, ArrayFinterpolant, n, MoleculeElements, MoleculeAtoms)
@@ -317,6 +316,7 @@ for j in range(0, len(Ageometric_matter_array)):
         
         sys.stdout.write("\r{0}%".format(round(((float(i)/len(darray))*100),1)))
         sys.stdout.flush()
+        
     print('\n' + 'index of sample: ', j)
     
     data = np.array([darray, Fluence_d_array, DoseGy_d_array])  
@@ -326,8 +326,7 @@ for j in range(0, len(Ageometric_matter_array)):
     
 #fig = Fun.FluenceDosePlotterFeatureSize(InitEnergy, Fluence_d_array, DoseGy_d_array, darray*10**(7), tag)
 
-
-
+'''
 '''
 ######################################## OLD COHERENT CASE ####################################
 print('\n')
