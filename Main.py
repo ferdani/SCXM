@@ -61,7 +61,6 @@ formula = map(''.join, zip(MoleculeSymbols, map(str, MoleculeAtoms)))
 print(''.join(formula))
 '''
 
-'''
 #for example biomolecule-protein
 MoleculeElements = ['Hydrogen', 'Carbon', 'Nitrogen', 'Oxygen', 'Sulfur']
 MoleculeSymbols = ['H', 'C', 'N', 'O', 'S']
@@ -71,8 +70,8 @@ formula = map(''.join, zip(MoleculeSymbols, map(str, MoleculeAtoms)))
 print(''.join(formula))
 rho_matter = 1.35 #Biomolecule
 tag = 'Biomolecule'
-'''
 
+'''
 #for example DNA
 MoleculeElements = ['Hydrogen', 'Carbon', 'Nitrogen', 'Oxygen']
 MoleculeSymbols = ['H', 'C', 'N', 'O']
@@ -82,7 +81,7 @@ formula = map(''.join, zip(MoleculeSymbols, map(str, MoleculeAtoms)))
 print(''.join(formula))
 rho_matter = 1.70 #DNA
 tag = 'DNA'
-
+'''
 '''
 #for example PMMA
 MoleculeElements = ['Carbon', 'Oxygen', 'Hydrogen']
@@ -102,7 +101,7 @@ MoleculeAtoms = np.array([1.6, 0.4])
 print('Calculating for the stechiometric formula: ')
 formula = map(''.join, zip(MoleculeSymbols, map(str, MoleculeAtoms)))
 print(''.join(formula))
-rho_matter = 1.1839 #Air at 20 degrees temperature
+rho_matter = 0.0011838999999999999 #Air at 25 degrees temperature
 tag = 'Air'
 '''
 '''
@@ -162,15 +161,15 @@ for ind, Element in enumerate(MoleculeElements):
 Fun.PhotonScatteringMoleculeProbabilities(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, \
                                       ArraySinterpolantBig, ArrayFinterpolant, CellPhotonsArray, MoleculeAtoms)
 
-
+'''
 [nMoleculeIncoherent, nMoleculeCoherent] = Fun.PhotonScatteringMoleculeNumbers(CellPhotonsArray, ProbabilityIncoherentMolecule, ProbabilityCoherentMolecule)
 [nMoleculeElementIncoherent, nMoleculeElementCoherent] = Fun.PhotonScatteringElementNumbers(nMoleculeIncoherent, nMoleculeCoherent, ProbabilityIncoherentElement, ProbabilityCoherentElement)
-
+'''
 
 '''
 #----------------------------- generate the random events for incoherent and coherent---------------------------------------------------------
 '''
-
+'''
 ThetaAnglesElementIncoherent = np.array([])
 ThetaAnglesElementCoherent = np.array([])
 DiffCrossSectionsElementIncoherent = np.array([])
@@ -192,7 +191,7 @@ for ind, Element in enumerate(MoleculeElements):
     [XR_ElementCoherent, YR_ElementCoherent] = RG.RandomNumberDistribution(ArrayC[1], nMoleculeElementCoherent[ind], InitEnergy, thetaRad, ArrayZ[ind], ArraySinterpolantSmall[ind], ArraySinterpolantBig[ind], ArrayFinterpolant[ind])
     ThetaAnglesElementCoherent = np.concatenate([ThetaAnglesElementCoherent, XR_ElementCoherent])
     DiffCrossSectionsElementCoherent = np.concatenate([DiffCrossSectionsElementCoherent, YR_ElementCoherent])
-
+'''
 
 '''
 #------------------------ plot the cross sections for incoherent and coherent and with random numbers ------------------------------------
@@ -204,7 +203,7 @@ for ind, Element in enumerate(MoleculeElements):
 '''
 #------------------------ Interaction in the detector and its geometry ----------------------------------------
 '''
-
+'''
 #water block dimensions (cm units):
 a_water = 0.001
 b_water = 0.001
@@ -251,41 +250,46 @@ ResultsEfficiencies_coh = np.vstack([ResultsEfficiencies_coh, [Eff_water_coh, Ef
     
 #delete the 0 rows
 ResultsEfficiencies_coh = ResultsEfficiencies_coh[~np.all(ResultsEfficiencies_coh == 0, axis=1)]
-
+'''
 
 '''
 #----------------------------- Fluence and Dose -----------------------------------------------------------------------
 '''
-'''
+
 #voxel parameters: ¡¡¡Son distintos de los parametros de la celula y agua para evaluar las eficiencias, realmente da igual !!!
-L = 5.0*10**(-4)
+#L = 5.0*10**(-4)
+L = 10.0*10**(-4)
 d_prime = 34.0*10**(-7)
 
 #feauture size:
 d = d_prime
 
-#bkg parameters:
-rho_bkg = 0.997 #water H2O
-BkgElements = ['Hydrogen', 'Oxygen']
-BkgAtoms = [2.0, 1.0]
-Sigma_bkg = 5.6225453216509171*10**(-24) #total cross section for water [cm2/atom] at 0.064 MeV initial energy
-#Ageometric_bkg = 1.0
-#Effi_bkg = 1.0
+#air size:
+a = 0.1
 
-#cell-matter parameters:
-#Ageometric_matter = 1.0
-#Effi_matter = 1.0
+#bkg water parameters:
+rho_bkg_water = 0.997 #water H2O
+Bkg_water_Elements = ['Hydrogen', 'Oxygen']
+Bkg_water_Atoms = [2.0, 1.0]
+Sigma_water_bkg = 5.6225453216509171*10**(-24) #total cross section for water [cm2/atom] at 0.064 MeV initial energy
+
+#bkg air parameters
+rho_bkg_air = 0.0011838999999999999 #air NO
+Bkg_air_Elements = ['Nitrogen', 'Oxygen']
+Bkg_air_Atoms = [1.6, 0.4]
+Sigma_air_bkg = 8.10279297127*10**(-24) #total cross section for air [cm2/atom] at 0.064 MeV initial energy
 
 ############################## DEPENDENCE WITH THE d SIZE INCOHERENT FOR DIFFERENT DETECTORS ################################
 #Ideal Detector // Detector 1: 100*45*5 // Detector 2: 100*45*1 // Detector 3: 50*25*5
 
 Ageometric_matter_array = np.array([1.0, 0.95, 0.88])
 Effi_matter_array       = np.array([1.0, 0.91, 0.74])
-Ageometric_bkg_array    = np.array([1.0, 0.95, 0.88])
+Ageometric_bkg_array    = np.array([1.0, 0.95, 0.88]) #The water and air have got the same efficiency and aceptance
 Effi_bkg_array          = np.array([1.0, 0.91, 0.74])
 
-#DetectorTag = np.array(['IdealDetector', '100-45-5', '50-25-5'])
-DetectorTag = np.array(['Ideal', 'Optimistic', 'Realistic'])
+# 'IdealDetector', '100-45-5', '50-25-5'
+#DetectorTag = np.array(['Ideal', 'Optimistic', 'Realistic'])
+DetectorTag = np.array(['Ideal_bkg_complete', 'Optimistic_bkg_complete', 'Realistic_bkg_complete'])
 
 darray = np.linspace(1.0*10**(-7), 0.0001, num=1000, endpoint=True) #1 nm to 1000 nm in cm case
         
@@ -306,7 +310,11 @@ for j in range(0, len(Ageometric_matter_array)):
     DoseGy_d_array = np.array([])
     
     for i in range(0, len(darray)):    
-        F = Fun.Fluence(L, darray[i], darray[i], rho_matter, rho_bkg, BkgElements, BkgAtoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter_array[j], Effi_matter_array[j], Sigma_bkg, Ageometric_bkg_array[j], Effi_bkg_array[j])
+        #F = Fun.Fluence_bkg_water(L, darray[i], darray[i], rho_matter, rho_bkg_water, Bkg_water_Elements, Bkg_water_Atoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter_array[j], Effi_matter_array[j], Sigma_water_bkg, Ageometric_bkg_array[j], Effi_bkg_array[j])
+        F = Fun.Fluence_bkg_air_water(L, darray[i], darray[i], a, rho_matter, rho_bkg_air, rho_bkg_water, Bkg_air_Elements, Bkg_water_Elements, \
+                          Bkg_air_Atoms, Bkg_water_Atoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter_array[j], Effi_matter_array[j], \
+                          Sigma_air_bkg, Sigma_water_bkg, Ageometric_bkg_array[j], Ageometric_bkg_array[j], Effi_bkg_array[j], Effi_bkg_array[j])
+
         Sigma_photo = Fun.PhotoabsorptionSigma(MoleculeElements, MoleculeAtoms, InitEnergy)
         [SigmaTotalIncoherentMoleculeCorrectedEnergy, SigmaTotalCoherentMoleculeCorrectedEnergy] = Fun.PhotonScatteringMoleculeCrossSectionsCorrected(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, ArraySinterpolantBig, ArrayFinterpolant, n, MoleculeElements, MoleculeAtoms)
         DoseGy = Fun.Dose(F, InitEnergy, Sigma_photo, SigmaTotalIncoherentMoleculeCorrectedEnergy*10**(-24))
@@ -326,16 +334,6 @@ for j in range(0, len(Ageometric_matter_array)):
     
 #fig = Fun.FluenceDosePlotterFeatureSize(InitEnergy, Fluence_d_array, DoseGy_d_array, darray*10**(7), tag)
 
-'''
-'''
-######################################## OLD COHERENT CASE ####################################
-print('\n')
-print('coherent case')
-
-F_coh = Fun.Fluence(L, d_prime, d, rho_matter, rho_bkg, BkgElements, BkgAtoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter, Effi_matter, Sigma_bkg, Ageometric_bkg, Effi_bkg)
-
-DoseGy_coh = Fun.Dose(F_coh, InitEnergy, Sigma_photo, SigmaTotalCoherentMoleculeCorrectedEnergy*10**(-24))
-'''
 
 '''
 #------------------------------- run the code independently for example to calculate random numbers -------------------------------------------------

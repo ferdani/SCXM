@@ -46,7 +46,12 @@ def PintaDose(FeatureSize, Dose, Sample, NumberPlot, labelsTag):
   
 
 Samples = ['Biomolecule', 'DNA', 'PMMA']  
-  
+
+labelsTag = ['Ideal det. (5um cell)', 'Optimistic det. (5um cell)', 'Conservative det. (5um cell)']
+labelsTag_complete_bkgs = ['Ideal det. (5um cell + medium)', 'Optimistic det. (5um cell + medium)', 'Conservative (5um cell + medium)']
+
+######################### With water equivalent for background ###########################################
+
 file_path_name_biomolecule = ['./OutputFiles/Biomolecule_Fluence_Dose_vs_FeatureSize_Ideal.txt', \
                               './OutputFiles/Biomolecule_Fluence_Dose_vs_FeatureSize_Optimistic.txt', \
                               './OutputFiles/Biomolecule_Fluence_Dose_vs_FeatureSize_Realistic.txt']
@@ -59,10 +64,22 @@ file_path_name_PMMA = ['./OutputFiles/PMMA_Fluence_Dose_vs_FeatureSize_Ideal.txt
                               './OutputFiles/PMMA_Fluence_Dose_vs_FeatureSize_Optimistic.txt', \
                               './OutputFiles/PMMA_Fluence_Dose_vs_FeatureSize_Realistic.txt']
 
-labelsTag = ['Ideal detector', 'Optimistic detector', 'Realistic detector']
+######################### With water equivalent and air for background --> Complete situation ###############
+
+file_path_name_biomolecule_complete_bkgs = ['./OutputFiles/Biomolecule_Fluence_Dose_vs_FeatureSize_Ideal_bkg_complete.txt', \
+                              './OutputFiles/Biomolecule_Fluence_Dose_vs_FeatureSize_Optimistic_bkg_complete.txt', \
+                              './OutputFiles/Biomolecule_Fluence_Dose_vs_FeatureSize_Realistic_bkg_complete.txt']
+
+file_path_name_DNA_complete_bkgs = ['./OutputFiles/DNA_Fluence_Dose_vs_FeatureSize_Ideal_bkg_complete.txt', \
+                              './OutputFiles/DNA_Fluence_Dose_vs_FeatureSize_Optimistic_bkg_complete.txt', \
+                              './OutputFiles/DNA_Fluence_Dose_vs_FeatureSize_Realistic_bkg_complete.txt']
+
+file_path_name_PMMA_complete_bkgs = ['./OutputFiles/PMMA_Fluence_Dose_vs_FeatureSize_Ideal_bkg_complete.txt', \
+                              './OutputFiles/PMMA_Fluence_Dose_vs_FeatureSize_Optimistic_bkg_complete.txt', \
+                              './OutputFiles/PMMA_Fluence_Dose_vs_FeatureSize_Realistic_bkg_complete.txt']
 
 '''
-########################## BIOMOLECULE ####################################
+########################## BIOMOLECULE Air bkg ####################################
 
 array_txt = np.loadtxt(file_path_name_biomolecule[0], skiprows=1)
 FeatureSize = array_txt[:,0] #Size (cm)
@@ -86,7 +103,7 @@ figura = PintaFluence(FeatureSize, Fluence, Samples[0], 1, labelsTag[2])
 figura = PintaDose(FeatureSize, Dose, Samples[0], 4, labelsTag[2])
 
 
-############################ DNA #######################################
+############################ DNA Air bkg #######################################
 
 array_txt = np.loadtxt(file_path_name_DNA[0], skiprows=1)
 FeatureSize = array_txt[:,0] #Size (cm)
@@ -110,7 +127,7 @@ figura = PintaFluence(FeatureSize, Fluence, Samples[1], 2, labelsTag[2])
 figura = PintaDose(FeatureSize, Dose, Samples[0], 5, labelsTag[2])
 
 
-########################### PMMA ######################################
+########################### PMMA Air bkg ######################################
 
 array_txt = np.loadtxt(file_path_name_PMMA[0], skiprows=1)
 FeatureSize = array_txt[:,0] #Size (cm)
@@ -132,8 +149,82 @@ Fluence = array_txt[:,1] #ph/mum2
 Dose = array_txt[:,2] #Gy
 figura = PintaFluence(FeatureSize, Fluence, Samples[2], 3, labelsTag[2])
 figura = PintaDose(FeatureSize, Dose, Samples[0], 6, labelsTag[2])
-
 '''
+##############################################################################################
+##############################################################################################
+
+########################## BIOMOLECULE Complete situation ####################################
+'''
+array_txt = np.loadtxt(file_path_name_biomolecule_complete_bkgs[0], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[0], 1, labelsTag[0])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 4, labelsTag[0])
+
+array_txt = np.loadtxt(file_path_name_biomolecule_complete_bkgs[1], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[0], 1, labelsTag[1])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 4, labelsTag[1])
+
+array_txt = np.loadtxt(file_path_name_biomolecule_complete_bkgs[2], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[0], 1, labelsTag[2])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 4, labelsTag[2])
+
+
+############################ DNA Complete situation #######################################
+
+array_txt = np.loadtxt(file_path_name_DNA_complete_bkgs[0], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[1], 2, labelsTag[0])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 5, labelsTag[0])
+
+array_txt = np.loadtxt(file_path_name_DNA_complete_bkgs[1], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[1], 2, labelsTag[1])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 5, labelsTag[1])
+
+array_txt = np.loadtxt(file_path_name_DNA_complete_bkgs[2], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[1], 2, labelsTag[2])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 5, labelsTag[2])
+
+
+########################### PMMA Complete situation ######################################
+
+array_txt = np.loadtxt(file_path_name_PMMA_complete_bkgs[0], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[2], 3, labelsTag[0])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 6, labelsTag[0])
+
+array_txt = np.loadtxt(file_path_name_PMMA_complete_bkgs[1], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[2], 3, labelsTag[1])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 6, labelsTag[1])
+
+array_txt = np.loadtxt(file_path_name_PMMA_complete_bkgs[2], skiprows=1)
+FeatureSize = array_txt[:,0] #Size (cm)
+Fluence = array_txt[:,1] #ph/mum2
+Dose = array_txt[:,2] #Gy
+figura = PintaFluence(FeatureSize, Fluence, Samples[2], 3, labelsTag[2])
+figura = PintaDose(FeatureSize, Dose, Samples[0], 6, labelsTag[2])
+'''
+
 ######################## Result independent plot with Villanueva data and ZOOM #################################
 
 array_txt = np.loadtxt('./Data/Villanueva_values.txt', skiprows=1) #Tendria que volver a escanear los datos de Pablo para corregir el inicio
@@ -151,6 +242,8 @@ Array_f = f(Array_x, A, B)
 fig, ax1 = plt.subplots()
 ax1.plot(Array_x, Array_f, 'k', label = 'Maximun tolerable dose (Villanueva et al.)')
 
+####
+
 array_txt_1 = np.loadtxt(file_path_name_biomolecule[0], skiprows=1)
 FeatureSize_1 = array_txt_1[:,0] #Size (cm)
 Dose_1 = array_txt_1[:,2] #Gy
@@ -166,6 +259,22 @@ FeatureSize_3 = array_txt_3[:,0] #Size (cm)
 Dose_3 = array_txt_3[:,2] #Gy
 ax1.plot(FeatureSize_3*10**(7), Dose_3, linestyle='-', label = labelsTag[2])
 
+####
+
+array_txt_1_bkg = np.loadtxt(file_path_name_biomolecule_complete_bkgs[0], skiprows=1)
+FeatureSize_1_bkg = array_txt_1_bkg[:,0] #Size (cm)
+Dose_1_bkg = array_txt_1_bkg[:,2] #Gy
+ax1.plot(FeatureSize_1_bkg*10**(7), Dose_1_bkg, linestyle='--', label = labelsTag_complete_bkgs[0])
+
+array_txt_2_bkg = np.loadtxt(file_path_name_biomolecule_complete_bkgs[1], skiprows=1)
+FeatureSize_2_bkg = array_txt_2_bkg[:,0] #Size (cm)
+Dose_2_bkg = array_txt_2_bkg[:,2] #Gy
+ax1.plot(FeatureSize_2_bkg*10**(7), Dose_2_bkg, linestyle='--', label = labelsTag_complete_bkgs[1])
+
+array_txt_3_bkg = np.loadtxt(file_path_name_biomolecule_complete_bkgs[2], skiprows=1)
+FeatureSize_3_bkg = array_txt_3_bkg[:,0] #Size (cm)
+Dose_3_bkg = array_txt_3_bkg[:,2] #Gy
+ax1.plot(FeatureSize_3_bkg*10**(7), Dose_3_bkg, linestyle='--', label = labelsTag_complete_bkgs[2])
 
 ax1.set_yscale('log')
 ax1.set_xscale('log')
@@ -193,13 +302,15 @@ ax2.plot(Array_x, Array_f, 'k', label = 'Maximun tolerable dose (Villanueva et a
 ax2.plot(FeatureSize_1*10**(7), Dose_1, linestyle='-', label = labelsTag[0])
 ax2.plot(FeatureSize_2*10**(7), Dose_2, linestyle='-', label = labelsTag[1])
 ax2.plot(FeatureSize_3*10**(7), Dose_3, linestyle='-', label = labelsTag[2])
-
+ax2.plot(FeatureSize_1_bkg*10**(7), Dose_1_bkg, marker='o', label = labelsTag[0])
+ax2.plot(FeatureSize_2_bkg*10**(7), Dose_2_bkg, marker='o', label = labelsTag[1])
+ax2.plot(FeatureSize_3_bkg*10**(7), Dose_3_bkg, marker='o', label = labelsTag[2])
 
 #ax2.set_yscale('log')
 #ax2.set_xscale('log')
-ax2.set_xlim([30.0, 40.0])
+ax2.set_xlim([30.0, 50.0])
 ax2.set_ylim([2*10**9, 6*10**9])
-ax2.set_xticks([30.0, 32.0, 34.0, 36.0, 38.0, 40.0])
+ax2.set_xticks([30.0, 32.0, 34.0, 36.0, 38.0, 40.0, 42.0, 44.0, 46.0, 48.0, 50.0])
 ax2.grid(True, which='both')
 
 plt.show()

@@ -459,10 +459,11 @@ def SigmaTotalMatter(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, Array
     
     return SigmaTotalMatter
 
-def Fluence(L, d_prime, d, rho_matter, rho_bkg, BkgElements, BkgAtoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter, Effi_matter, Sigma_bkg, Ageometric_bkg, Effi_bkg):
+
+def Fluence_bkg_water(L, d_prime, d, rho_matter, rho_bkg, BkgElements, BkgAtoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter, Effi_matter, Sigma_bkg, Ageometric_bkg, Effi_bkg):
     """
     Estimate molar mass of molecule, then estimate sigma prime and then estimated the Fluence in a system: bkg-matter-bkg
-    units: cm and g. All using auxiliar functions.
+    units: cm and g. All using auxiliar functions. With bkg only water around the material of interest
     """
     M_molec_matter = Molar_mass(MoleculeElements, MoleculeAtoms) #[g/molecules]
     M_molec_bkg = Molar_mass(BkgElements, BkgAtoms) #[g/molecules]
@@ -477,6 +478,31 @@ def Fluence(L, d_prime, d, rho_matter, rho_bkg, BkgElements, BkgAtoms, MoleculeE
     #print('minimun fluence: ', format(fluence*10**(-8), ".5E"), 'particles/mum2$')
     
     return fluence #[particles/cm2]
+
+
+def Fluence_bkg_air_water(L, d_prime, d, a, rho_matter, rho_bkg_air, rho_bkg_water, Bkg_air_Elements, Bkg_water_Elements, \
+                          Bkg_air_Atoms, Bkg_water_Atoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter, Effi_matter, \
+                          Sigma_air_bkg, Sigma_water_bkg, Ageometric_air_bkg, Ageometric_water_bkg, Effi_air_bkg, Effi_water_bkg):
+    """
+    Estimate molar mass of molecule, then estimate sigma prime and then estimated the Fluence in a system: bkg-matter-bkg
+    units: cm and g. All using auxiliar functions. With water around the material of interest and then air around it. "a" is the size of air
+    """
+    M_molec_matter = Molar_mass(MoleculeElements, MoleculeAtoms) #[g/molecules]
+    M_molec_air_bkg = Molar_mass(Bkg_air_Elements, Bkg_air_Atoms) #[g/molecules]
+    M_molec_water_bkg = Molar_mass(Bkg_water_Elements, Bkg_water_Atoms) #[g/molecules]
+        
+    Sigma_Mass_Omega_matter = Sigma_Mass_Omega(Sigma_matter, Ageometric_matter, Effi_matter, M_molec_matter) 
+    Sigma_Mass_Omega_air_bkg = Sigma_Mass_Omega(Sigma_air_bkg, Ageometric_air_bkg, Effi_air_bkg, M_molec_air_bkg) 
+    Sigma_Mass_Omega_water_bkg = Sigma_Mass_Omega(Sigma_water_bkg, Ageometric_water_bkg, Effi_water_bkg, M_molec_water_bkg) 
+    
+    # this is the complete equation without approximations
+    fluence_numerador = 25.0 * (Sigma_Mass_Omega_water_bkg * rho_bkg_water * (2.0*L - d) + Sigma_Mass_Omega_air_bkg * rho_bkg_air * 4.0*a + Sigma_Mass_Omega_water_bkg * rho_bkg_water * d)
+    fluence_denominador = d**2 * d_prime**2 * (Sigma_Mass_Omega_matter * rho_matter - Sigma_Mass_Omega_water_bkg * rho_bkg_water)**2
+    fluence = fluence_numerador/fluence_denominador
+    #print('minimun fluence: ', format(fluence*10**(-8), ".5E"), 'particles/mum2$')
+    
+    return fluence #[particles/cm2]
+
 
 
 def PhotoabsorptionSigma(MoleculeElements, MoleculeAtoms, InitEnergy):
