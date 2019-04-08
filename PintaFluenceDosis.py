@@ -4,18 +4,21 @@
 Created on Tue Mar 26 18:06:31 2019
 
 @author: macbookpro
+
+
 """
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-from mpl_toolkits.axes_grid.inset_locator import (inset_axes, InsetPosition,
-                                                  mark_inset)
+from mpl_toolkits.axes_grid.inset_locator import (inset_axes, InsetPosition, mark_inset)
 
 fig=plt.figure(figsize=(20,20))
 fig.subplots_adjust(top=0.92, bottom=0.01, hspace=0.4, wspace=0.25)
 
 def PintaFluence(FeatureSize, Fluence, Sample, NumberPlot, labelsTag):
-    
+    """
+    The function for paint the Fluence vs the feature size
+    """
     ax=fig.add_subplot(3,3,NumberPlot) #number plot 1-2-3
     ax.set_title(Sample +'\n', fontsize=15)
     ax.set_ylabel(r'Fluence [ph/$\mu$m$^{2}$]', fontsize=12)  
@@ -31,7 +34,9 @@ def PintaFluence(FeatureSize, Fluence, Sample, NumberPlot, labelsTag):
     return fig
 
 def PintaDose(FeatureSize, Dose, Sample, NumberPlot, labelsTag):
-    
+    """
+    The function for paint the Dose vs the feature size
+    """
     ax=fig.add_subplot(3,3,NumberPlot) #number plot 4-5-6
     ax.set_ylabel(r'Dose [Gy]', fontsize=12)  
     ax.set_xlabel(r'Feature size [nm]', fontsize=12) 
@@ -154,7 +159,7 @@ figura = PintaDose(FeatureSize, Dose, Samples[0], 6, labelsTag[2])
 ##############################################################################################
 
 ########################## BIOMOLECULE Complete situation ####################################
-'''
+
 array_txt = np.loadtxt(file_path_name_biomolecule_complete_bkgs[0], skiprows=1)
 FeatureSize = array_txt[:,0] #Size (cm)
 Fluence = array_txt[:,1] #ph/mum2
@@ -223,10 +228,10 @@ Fluence = array_txt[:,1] #ph/mum2
 Dose = array_txt[:,2] #Gy
 figura = PintaFluence(FeatureSize, Fluence, Samples[2], 3, labelsTag[2])
 figura = PintaDose(FeatureSize, Dose, Samples[0], 6, labelsTag[2])
-'''
+
 
 ######################## Result independent plot with Villanueva data and ZOOM #################################
-
+'''
 array_txt = np.loadtxt('./Data/Villanueva_values.txt', skiprows=1) #Tendria que volver a escanear los datos de Pablo para corregir el inicio
 FeatureSize = array_txt[:,0] #Size (cm)
 Dose = array_txt[:,1] #Gy
@@ -302,9 +307,9 @@ ax2.plot(Array_x, Array_f, 'k', label = 'Maximun tolerable dose (Villanueva et a
 ax2.plot(FeatureSize_1*10**(7), Dose_1, linestyle='-', label = labelsTag[0])
 ax2.plot(FeatureSize_2*10**(7), Dose_2, linestyle='-', label = labelsTag[1])
 ax2.plot(FeatureSize_3*10**(7), Dose_3, linestyle='-', label = labelsTag[2])
-ax2.plot(FeatureSize_1_bkg*10**(7), Dose_1_bkg, marker='o', label = labelsTag[0])
-ax2.plot(FeatureSize_2_bkg*10**(7), Dose_2_bkg, marker='o', label = labelsTag[1])
-ax2.plot(FeatureSize_3_bkg*10**(7), Dose_3_bkg, marker='o', label = labelsTag[2])
+ax2.plot(FeatureSize_1_bkg*10**(7), Dose_1_bkg, linestyle='--', label = labelsTag[0])
+ax2.plot(FeatureSize_2_bkg*10**(7), Dose_2_bkg, linestyle='--', label = labelsTag[1])
+ax2.plot(FeatureSize_3_bkg*10**(7), Dose_3_bkg, linestyle='--', label = labelsTag[2])
 
 #ax2.set_yscale('log')
 #ax2.set_xscale('log')
@@ -314,3 +319,4 @@ ax2.set_xticks([30.0, 32.0, 34.0, 36.0, 38.0, 40.0, 42.0, 44.0, 46.0, 48.0, 50.0
 ax2.grid(True, which='both')
 
 plt.show()
+'''

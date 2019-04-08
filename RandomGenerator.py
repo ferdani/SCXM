@@ -5,7 +5,7 @@ Created on Fri Dec 14 12:44:36 2018
 
 @author: macbookpro
 
-GENERATOR OF RANDOM NUMBERS ACORDING TO DISTRIBUTION FUNCTION
+MONTE CARLO SIMULATION RANDOM NUMBERS FOR A DISTRIBUTION FUNCTION
 """
 
 import numpy as np
@@ -18,6 +18,10 @@ import Functions as Fun
 #---------------------------- Generating random numbers----------------------------------------------------------------
 '''
 def RandomNumberDistribution(C, n, InitEnergy, thetaRad, Z, SinterpolantSmall, SinterpolantBig, Finterpolant):
+    """
+    The principal function to build random pair numbers for a distribution function. For example the Klein-Nishina or
+    for example the incoherent cross section. That function gives a Monte Carlo simulation for a distribution function
+    """
     #define the interval (theta_min < theta_max)
     theta_min = np.min(thetaRad)
     theta_max = np.max(thetaRad)
@@ -119,6 +123,10 @@ def RandomNumberDistribution(C, n, InitEnergy, thetaRad, Z, SinterpolantSmall, S
 ---------------------------------- Build the real distribution functions to plot then -------------------------------
 '''
 def RealDistributionFunctionNumbers(C, InitEnergy, thetaRad, Z, SinterpolantSmall, SinterpolantBig, Finterpolant):
+    """
+    Build the array of the choosen differential cross section (aka distribution function) to plot it (in red) then 
+    with the random pair numbers generated
+    """
     #Build data with the real functions to plot it
     SigmaArray = np.array([])
 
@@ -147,7 +155,11 @@ def RealDistributionFunctionNumbers(C, InitEnergy, thetaRad, Z, SinterpolantSmal
 '''
 #---------------------------------- Plotter ----------------------------------------
 '''
-def PlotterRandomNumbersDistributions(C, n, InitEnergy, thetaRad, SigmaArray, XR, YR):        
+def PlotterRandomNumbersDistributions(C, n, InitEnergy, thetaRad, SigmaArray, XR, YR):   
+    """
+    The Poltter for the random numbers and the real curve distribution. That function is useful to see all the points
+    randomly generated under the real distribution function (in color red)
+    """     
     fig=plt.figure(figsize=(20,10))
     fig.subplots_adjust(top=0.90, bottom=0.10, hspace=0.2, wspace=0.2)
     ax=fig.add_subplot(2,2,(1,2))

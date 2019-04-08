@@ -31,11 +31,17 @@ Z_cell = 0.0
 
 #------------------- probability law  ---------------------
 def ProbabilityInteract(Path, Lambda):
+    """
+    The law of interact probability
+    """
     return (1 - np.exp(-Path/Lambda))
 
 
 #----------------- pull the upper photons ----------------
 def UpperPhotons(XR):
+    """
+    Extact the photons in the upper part of the beam linea. Between theta [0, pi] angles interval
+    """
     UpperPhotons_XR = np.array([])
     for i in range(0,len(XR)):
         if (XR[i] > 0.0) & (XR[i] < math.pi):
@@ -45,6 +51,9 @@ def UpperPhotons(XR):
 
 #----------------- Correction for Detector's corners, Airblock's corners, Waterblock's corners -----------
 def Corners(d, large, hole, theta1):
+    """
+    The function that corrects the corners for the right evaluation of the mean free path
+    """
     thetacritic1 = np.arctan((hole + d)/(large/2.0))
     thetacritic2 = np.pi - np.arctan((hole + d)/(large/2.0))
     
@@ -63,6 +72,10 @@ def Corners(d, large, hole, theta1):
 '''    
 #-------------------probability to colision in the water block before the detector----------------
 def WaterBlock(a_water, b_water, IntroducedPhotonsWater_XR):
+    """
+    The water-equivalent around the material of interest block, in this function the interaction of the photons
+    into thi block is evaluated
+    """
     #calculate the interaction path of the photons into the water block
     r_water = np.array([]) #the path of photons in the water
     for i in range(0,len(IntroducedPhotonsWater_XR)):
@@ -96,6 +109,10 @@ def WaterBlock(a_water, b_water, IntroducedPhotonsWater_XR):
 
 #-------------------probability to colision in the air block before the detector----------------
 def AirBlock(a_air, b_air, IntroducedPhotonsAir_XR):
+    """
+    The air into the space between the water-equivalent block and the detector, 
+    in this function the interaction of the photons into this block is evaluated
+    """
     #calculate the interaction path of the photons into the air block
     r_air = np.array([]) #the path of photons in the air
     for i in range(0,len(IntroducedPhotonsAir_XR)):
@@ -129,9 +146,9 @@ def AirBlock(a_air, b_air, IntroducedPhotonsAir_XR):
 
 #---------------------------Detector box description and interaction ----------------------------
 def DetectorBox(a_det, b_det, c_det, IntroducedPhotonsDetector_XR, Lambda_det): #dimensions (cm) of detector box a, b, c.
-    #----------------------------Correct with X_det... and X_cell----------
-    #----bla bla bla
-
+    """
+    This function gives the geometry of the detector and evaluated the response of the detector to photons
+    """
     #forbiden angle zone detection with the before geometry (radians unit)
     theta_forbiden_A1 = np.arctan(c_det/(b_det/2.0))
     theta_forbiden_A2 = math.pi/2.0 + np.arctan((b_det/2.0)/c_det)
@@ -183,7 +200,7 @@ def DetectorBox(a_det, b_det, c_det, IntroducedPhotonsDetector_XR, Lambda_det): 
 
 def GenerateBackgrounds(l1_air, l1_water, l_cell, l2_water, l2_air, n):
     """
-    probability to colision in the air line after the beam pipe, then in the water, then in the cell
+    Probability to colision in the air line after the beam pipe, then in the water, then in the cell
     and again into water and finally air
     """
     
@@ -482,7 +499,8 @@ def GenerateBackgrounds(l1_air, l1_water, l_cell, l2_water, l2_air, n):
 '''
 
 def InteractDetectorBackgrounds(a_det, b_det, c_det, l1_air, l2_air, AirLine_1_Bkg, WaterLine_1_Bkg, WaterLine_2_Bkg, AirLine_2_Bkg, Lambda_det):
-    """With the angles of each background independently we can evaluate the permitted angles and the
+    """
+    With the angles of each background independently we can evaluate the permitted angles and the
     interaction into de detector
     """
     
@@ -630,7 +648,10 @@ def InteractDetectorBackgrounds(a_det, b_det, c_det, l1_air, l2_air, AirLine_1_B
 '''
 
 def Efficiencies(UpperPhotons_XR, Upper_NoWaterInteract_XR, Upper_NoAirInteract_XR, permitted_XR, MeasuredPhoton_XR):
-    
+    """
+    The function that evaluates the efficiencies and aceptances with the ratio between the length of the arrays
+    that contains the photons
+    """ 
     #Efficiency in the water block, survival photons vs the upper photons
     try:
         Eff_water = len(Upper_NoWaterInteract_XR)/len(UpperPhotons_XR)
@@ -688,6 +709,10 @@ def Efficiencies(UpperPhotons_XR, Upper_NoWaterInteract_XR, Upper_NoAirInteract_
 #------------------------------------------------- Plotter ----------------------------------------
 '''
 def PlotterEfficiencyDistributions(n, InitEnergy, UpperPhotons_XR, Upper_NoAirInteract_XR, permitted_XR, MeasuredPhoton_XR): 
+    """
+    The function that plots in histograms the photons (all the types) distributed in theta
+    The types are: upper, not interact in air or water, permitted by geometry and measured in the detector 
+    """
     # Distribution of the photon diferents efficiencies on each part
     fig=plt.figure(figsize=(20,10))
     fig.subplots_adjust(top=0.90, bottom=0.10, hspace=0.2, wspace=0.2)

@@ -5,7 +5,8 @@ Created on Fri Dec 14 12:29:56 2018
 
 @author: macbookpro
 
-DEFINE DISTRIBUTION FUNCTIONS AND AUXILIAR FUNCTIONS
+DEFINE THE READ-GET DATA FUNCTION, DEFINE THE DISTRIBUTION FUNCTIONS 
+AND DEFINE THE DOSE, FLUENCE AND AUXILIAR FUNCTIONS. 
 """
 import numpy as np
 from scipy import interpolate
@@ -25,7 +26,9 @@ c = 1.0 #Fundamental light constant (cm/s)
 '''
 
 def ReadGetData(Element, TableName):
-    
+    """
+    Read the data into the Excel and load the values for S and F functions per each element (the choosen Element as variable)
+    """
     #----------------------------- Read the data of excel of the elements------------------------------------------------
     # Should be necessary to save previously the Excel in csv and then save the csv as Excel. Only for security.        
     doc = openpyxl.load_workbook(TableName) #Load the Excel
@@ -121,6 +124,10 @@ def ReadGetData(Element, TableName):
 '''
 
 def SinterpolantFunction(X, SinterpolantSmall, SinterpolantBig):
+    """
+    Using the data from S values per each element an interpolant is build, with this interpolant it's posible
+    to extract the correction value
+    """
     #using the interpolant of S function extract the correction value
     try:
         ScateringFunctionValueS = SinterpolantSmall(X)
@@ -131,6 +138,10 @@ def SinterpolantFunction(X, SinterpolantSmall, SinterpolantBig):
 
 
 def FinterpolantFunction(X, Z, Finterpolant):
+    """
+    Using the data from F values per each element an interpolant is build, with this interpolant it's posible
+    to extract the correction value
+    """
     #using the interpolant of F function extract the correction value
     try:
         ScateringFunctionValueF = np.exp(Finterpolant(np.log(X)))
@@ -144,7 +155,8 @@ def FinterpolantFunction(X, Z, Finterpolant):
 '''
 
 def BeamPhotons(n):
-    """generate the empty array of the beam pipe line with angle 0 (the angle of the beam line)
+    """
+    Generate the empty array of the beam pipe line with angle 0 (the angle of the beam line)
     """
     BeamPhotonsArray = [0]*n
     print('\n')
@@ -156,7 +168,8 @@ def BeamPhotons(n):
 '''
 
 def FinalEnergy(E, theta):
-    """calculate the final energy of the photon with the Compton equation
+    """
+    Calculate the final energy of the photon with the Compton equation
     """
     FinalEnergyArray = np.array([])
     for i in range(0, len(theta)):
@@ -170,6 +183,10 @@ def FinalEnergy(E, theta):
 '''
 
 def Xe_MeanFreePath_interpolant():
+    """
+    Using the data of photoelectric absorption from the NIST an interpolant is created to build the 
+    mean free path for Xenon
+    """
     #the path to the data
     file_path_name = './Data/Xe_NIST_PhotelAbsorb.txt'
     #extract the tow rows
@@ -184,6 +201,9 @@ def Xe_MeanFreePath_interpolant():
     return Xe_MFP_interpolant
 
 def Xe_MeanFreePath(energy, Xe_MFP_interpolant):
+    """
+    Use the interpolant for Xenon with the mean free path and evaluate it for an input-variable energy
+    """
     #with the previus interpolant make the lambdas for each energy
     Lambda = np.array([])
     for i in range(0, len(energy)):
@@ -196,17 +216,27 @@ def Xe_MeanFreePath(energy, Xe_MFP_interpolant):
 '''
 
 def KleinNishinaCrossSection(InitEnergy, theta):
+    """
+    The differential Compton cross section called Klein-Nishina
+    """
     #definition of Klein Nishina cross section. InitEnergy in MeV. Theta in rads
     P = 1.0/(1 + (InitEnergy/(m*c**2))*(1-np.cos(theta)))
     return ((re**2/2)*P**2*(P+P**-1-np.sin(theta)**2))
  
     
 def ThompsonCrossSection(theta):
+    """
+    The differential Thomson cross section
+    """
     #definition of Thompson cross section.
     return (re**2/2)*(1+np.cos(theta)**2)
 
 
 def IncoherentCrossSection(InitEnergy, theta, SinterpolantSmall, SinterpolantBig):
+    """
+    The incoherent cross section, by definition: is the Klein-Nishina cross section corrected with S
+    scattering function
+    """
     #definition of the distribution Klein-Nishina corrected with S
     KN=KleinNishinaCrossSection(InitEnergy, theta)
     X=np.sin(theta/2.0)*(InitEnergy*10**6)/12398.520 #la energía en eV
@@ -216,6 +246,10 @@ def IncoherentCrossSection(InitEnergy, theta, SinterpolantSmall, SinterpolantBig
 
        
 def CoherentCrossSection(InitEnergy, theta, Z, Finterpolant):
+    """
+    The coherent cross section, by definition: is the Klein-Nishina cross section corrected with F
+    atomic form factor
+    """
     #definition of the distribution Thomson corrected with F**2
     TH=ThompsonCrossSection(theta)
     X=np.sin(theta/2.0)*(InitEnergy*10**6)/12398.520 #la energía en eV
@@ -225,6 +259,9 @@ def CoherentCrossSection(InitEnergy, theta, Z, Finterpolant):
 
 
 def KNpolarization(InitEnergy, theta, phi):
+    """
+    The Compton cross section with polarization, it means without phi average in Klein-Nishina
+    """
     #definition of the differential cross section KleinNishina with polarization.
     FinalEnergy = InitEnergy/(1 + (InitEnergy/(m*c**2))*(1-np.cos(theta)))
     ratio = FinalEnergy/InitEnergy
@@ -232,11 +269,17 @@ def KNpolarization(InitEnergy, theta, phi):
 
 
 def THpolarization(theta, phi):
+    """
+    The Thomson cross section with polarization
+    """
     #definition of Thompson cross section with polarization.
     return (re**2)*(1-(np.sin(theta)**2)*(np.cos(phi)**2))
 
 
 def IncoherentPolarization3D(InitEnergy, theta, phi, SinterpolantSmall, SinterpolantBig):
+    """
+    The incoherent cross section in three dimensions with the polarization
+    """
     #definition of incoherent cross section with polarization in three dimensions
     THETA, PHI = np.meshgrid(theta, phi)
     sfactor = np.array([])
@@ -253,6 +296,9 @@ def IncoherentPolarization3D(InitEnergy, theta, phi, SinterpolantSmall, Sinterpo
 
 
 def CoherentPolarization3D(InitEnergy, theta, phi, Z, Finterpolant):
+    """
+    The coherent cross section in three dimensions with the polarization
+    """
     #definition of incoherent cross section with polarization in three dimensions
     THETA, PHI = np.meshgrid(theta, phi)
     ffactor = np.array([])
@@ -269,7 +315,9 @@ def CoherentPolarization3D(InitEnergy, theta, phi, Z, Finterpolant):
 
 
 def IntegratedCrossSection(theta, dSigmaArray):
-    """integrated a differential cross section without phi dependence  
+    """
+    Integrated any differential cross section array without phi dependence, returns Sigma total and 
+    the error in the integration
     """
     Sigma = []
     SigmaError = []
@@ -283,8 +331,10 @@ def IntegratedCrossSection(theta, dSigmaArray):
     
 
 def PhotonScatteringMoleculeProbabilities(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, ArraySinterpolantBig, ArrayFinterpolant, n, MoleculeAtoms):
-    """Estimar las secciones eficaces por elemento en la molecula y la sección eficaz total, tanto para el proceso incoherente
-    como para el proceso coherente. También se estiman las probabilidades asociadas a los scatterings sobre cada elemento de la molecula
+    """
+    Estimate the cross section per element in a molecule and the total cross-section, both for the incoherent process 
+    and for the coherent process. The probabilities associated with scatterings on each element of the molecule 
+    are also estimated.
     """
     SigmaIncoherentMoleculeElement = np.array([])
     SigmaCoherentMoleculeElement = np.array([])
@@ -340,8 +390,10 @@ def PhotonScatteringMoleculeProbabilities(InitEnergy, thetaRad, ArrayZ, ArraySin
 
 
 def PhotonScatteringMoleculeNumbers(n, ProbabilityIncoherentMolecule, ProbabilityCoherentMolecule):
-    """calcular el numero de eventos n que se producen en la molecula por una distribución
-    u otra de secciones eficaces, en principio: scattering incoherente y coherente. Es decir, n_inco y n_coh
+    """
+    Calculate the number of events n that are produced in the molecule by a distribution or another of 
+    cross sections. In principle: incoherent and coherent scattering. That is, n_inco and n_coh.
+    This function use the results for PhotonScatteringMoleculeProbabilities function
     """
     nMoleculeIncoherent = 0.0 #numero de fotones scattering incoherente
     nMoleculeCoherent = 0.0 #numero de fotones scattering coherente
@@ -363,7 +415,9 @@ def PhotonScatteringMoleculeNumbers(n, ProbabilityIncoherentMolecule, Probabilit
 
 
 def PhotonScatteringElementNumbers(nMoleculeIncoherent, nMoleculeCoherent, ProbabilityIncoherentElement, ProbabilityCoherentElement):
-    """calcular el numero de eventos n_inco_element y n_coh_element
+    """
+    Calculate the number of events n_inco_element and n_coh_element (per each element in the molecule). 
+    This function use the results per molecule for PhotonScatteringMoleculeNumbers function
     """
     nMoleculeElementIncoherent = np.array([])
     nMoleculeElementCoherent = np.array([])
@@ -387,7 +441,7 @@ def PhotonScatteringElementNumbers(nMoleculeIncoherent, nMoleculeCoherent, Proba
     
 def Molar_mass(MoleculeElements, MoleculeAtoms):
     """
-    Estimate molar mass of molecule
+    Estimate molar mass of a molecule
     """
     Navogadro = 6.022140857*10**(23)
     M_element = np.array([])
@@ -419,14 +473,16 @@ def Molar_mass(MoleculeElements, MoleculeAtoms):
 
     
 def Sigma_Mass_Omega(Sigma, Ageometric, Effi, M_molec):
-    """generic sigma prime axuliar function
+    """
+    Estimate the generic sigma prime (axuliar function in the Dose and Fluence evaluation)
     """
     sigma = Sigma * Ageometric * Effi / M_molec
     
     return sigma
 
 def SigmaTotalMatter(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, ArraySinterpolantBig, ArrayFinterpolant, n, MoleculeAtoms):
-    """Estimar la seccion eficaz del material
+    """
+    Estimate the total cross section for the material of interest (axuliar function in the Dose and Fluence evaluation)
     """
     SigmaIncoherentMoleculeElement = np.array([])
     SigmaCoherentMoleculeElement = np.array([])
@@ -463,7 +519,7 @@ def SigmaTotalMatter(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, Array
 def Fluence_bkg_water(L, d_prime, d, rho_matter, rho_bkg, BkgElements, BkgAtoms, MoleculeElements, MoleculeAtoms, Sigma_matter, Ageometric_matter, Effi_matter, Sigma_bkg, Ageometric_bkg, Effi_bkg):
     """
     Estimate molar mass of molecule, then estimate sigma prime and then estimated the Fluence in a system: bkg-matter-bkg
-    units: cm and g. All using auxiliar functions. With bkg only water around the material of interest
+    units: cm and g. All using previous auxiliar functions. With bkg only water-equivalent around the material of interest
     """
     M_molec_matter = Molar_mass(MoleculeElements, MoleculeAtoms) #[g/molecules]
     M_molec_bkg = Molar_mass(BkgElements, BkgAtoms) #[g/molecules]
@@ -485,7 +541,9 @@ def Fluence_bkg_air_water(L, d_prime, d, a, rho_matter, rho_bkg_air, rho_bkg_wat
                           Sigma_air_bkg, Sigma_water_bkg, Ageometric_air_bkg, Ageometric_water_bkg, Effi_air_bkg, Effi_water_bkg):
     """
     Estimate molar mass of molecule, then estimate sigma prime and then estimated the Fluence in a system: bkg-matter-bkg
-    units: cm and g. All using auxiliar functions. With water around the material of interest and then air around it. "a" is the size of air
+    units: cm and g. All using auxiliar functions. With water-equivalent around the material of interest and then air around all. 
+    It means, the realistic situation with cell (water-equivalent and material of interest) + bkg (air). 
+    Where the parameter "a" is the size of air.
     """
     M_molec_matter = Molar_mass(MoleculeElements, MoleculeAtoms) #[g/molecules]
     M_molec_air_bkg = Molar_mass(Bkg_air_Elements, Bkg_air_Atoms) #[g/molecules]
@@ -552,8 +610,9 @@ def PhotoabsorptionSigma(MoleculeElements, MoleculeAtoms, InitEnergy):
     return Sigma_photo #[cm2/g·atom]
 
 def PhotonScatteringMoleculeCrossSectionsCorrected(InitEnergy, thetaRad, ArrayZ, ArraySinterpolantSmall, ArraySinterpolantBig, ArrayFinterpolant, n, MoleculeElements, MoleculeAtoms):
-    """Estimar las secciones eficaces por elemento en la molecula y la sección eficaz total, tanto para el proceso incoherente
-    como para el proceso coherente con las correcciones de energía y de masa molecular de la integral de la dosis
+    """
+    Estimate the cross sections per element into molecule and the total cross section, both for the incoherent process 
+    and for the coherent process with the energy and molecular mass corrections of the integral dose integral
     """
     SigmaIncoherentMoleculeElement = np.array([])
     SigmaCoherentMoleculeElement = np.array([])
@@ -587,8 +646,9 @@ def PhotonScatteringMoleculeCrossSectionsCorrected(InitEnergy, thetaRad, ArrayZ,
             
        
 def IntegratedCrossSectionEnergyCorrection(theta, dSigmaArray, InitEnergy, MoleculeElements, MoleculeAtoms):
-    """integrated a differential cross section without phi dependence with de energy correction, see Villanueva's paper 
-    corrected with the energy and molecular mass
+    """
+    Integrated a differential cross section without phi dependence with de energy dependence 
+    (see the equation in Villanueva's paper) corrected with the energy and molecular mass
     """
     Sigma = np.array([])
     SigmaError = np.array([])
@@ -608,7 +668,7 @@ def IntegratedCrossSectionEnergyCorrection(theta, dSigmaArray, InitEnergy, Molec
 
 def Dose(fluence, InitEnergy, Sigma_photo, Sigma_incoh):
     """
-    Estimated the minum dose according with Villanueva's paper
+    Estimated the minimum dose according with Villanueva's paper. It is a local dose in [Gy]
     """
     D = fluence * InitEnergy * (Sigma_photo + Sigma_incoh) #fluence and sigmas in cm
     DoseGy = D*1.60213*10**(-13)*1000 #change units MeV to Jules and g to Kg
@@ -617,6 +677,10 @@ def Dose(fluence, InitEnergy, Sigma_photo, Sigma_incoh):
     return DoseGy
 
 def FluenceDosePlotterFeatureSize(InitEnergy, Fluence, DoseGy, FeatureSize, Sample):
+    """
+    The plotter for Fluence and Dose. Exist a file called PintaFluenceDosis.py to do that. 
+    This function is not useful
+    """
     fig=plt.figure(figsize=(20,10))
     fig.subplots_adjust(top=0.90, bottom=0.10, hspace=0.2, wspace=0.2)
     

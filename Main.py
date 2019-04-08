@@ -381,4 +381,3 @@ SigmaInco = np.array([])
 for i in range(0, len(thetaRad)):
     SigmaInco = np.append(SigmaInco, Fun.IncoherentCrossSection(InitEnergy, thetaRad[i]))
 '''
-
