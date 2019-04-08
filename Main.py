@@ -3,7 +3,8 @@
 """
 Created on Wed Nov  7 13:08:52 2018
 
-@author: macbookpro
+@author: Daniel Fernandez Fernandez
+daniel.fernandez.fernandez.94@gmail.com
 
 THE MAIN, READ THE DATA AND RUN THE SIMULATION OF THE DETECTOR
 """

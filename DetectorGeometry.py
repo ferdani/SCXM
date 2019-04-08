@@ -3,7 +3,8 @@
 """
 Created on Fri Dec 14 12:48:56 2018
 
-@author: macbookpro
+@author: Daniel Fernandez Fernandez
+daniel.fernandez.fernandez.94@gmail.com
 
 DETECTOR GEOMETRY, BACKGROUNDS, INTERACTIONS ON THE DETECTOR, GEOMETRIC ACEPTANCE AND EFFICIENCIES 
 """

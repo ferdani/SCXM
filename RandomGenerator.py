@@ -3,7 +3,8 @@
 """
 Created on Fri Dec 14 12:44:36 2018
 
-@author: macbookpro
+@author: Daniel Fernandez Fernandez
+daniel.fernandez.fernandez.94@gmail.com
 
 MONTE CARLO SIMULATION RANDOM NUMBERS FOR A DISTRIBUTION FUNCTION
 """

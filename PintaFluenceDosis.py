@@ -3,9 +3,10 @@
 """
 Created on Tue Mar 26 18:06:31 2019
 
-@author: macbookpro
+@author: Daniel Fernandez Fernandez
+daniel.fernandez.fernandez.94@gmail.com
 
-
+PLOT THE DOSE AND THE FLUENCE FOR BIOMOLECULE, DNA AND PMMA
 """
 import numpy as np
 import matplotlib.pyplot as plt

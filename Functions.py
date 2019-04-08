@@ -3,7 +3,8 @@
 """
 Created on Fri Dec 14 12:29:56 2018
 
-@author: macbookpro
+@author: Daniel Fernandez Fernandez
+daniel.fernandez.fernandez.94@gmail.com
 
 DEFINE THE READ-GET DATA FUNCTION, DEFINE THE DISTRIBUTION FUNCTIONS 
 AND DEFINE THE DOSE, FLUENCE AND AUXILIAR FUNCTIONS. 
