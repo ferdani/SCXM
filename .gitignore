@@ -1,0 +1,15 @@
+# Exclude compiled files
+*.so
+*.d
+*.pcm
+
+# Exclude files by emacs
+*~
+.~*
+# Exclude python cache
+_pycache_
+
+# Others
+.DS_Store
+*_temp/
+OutputFiles/
