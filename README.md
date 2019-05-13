@@ -16,10 +16,6 @@ python
 Run the analysis
 ====
 
-Execute Main.py Example: 
+Execute Main.py Example:
 
->> python Main.py
-
-
-
-    
+    python Main.py
