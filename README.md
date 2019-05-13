@@ -1,6 +1,7 @@
-# SCXM
-Scan - Compton - X-ray - Microscopy with cylindrical TPC
-Download the code
+# README of SCXM
+# Scan - Compton - X-ray - Microscopy with cylindrical TPC
+
+## Download the code
 ====
 
 Download all the code from github.
@@ -8,12 +9,12 @@ Download all the code from github.
     git clone https://github.com/ferdani/SCXM
     cd SCXM
 
-Set the enviroment
+## Set the enviroment
 ====
 
-python
+All the code is wrote using python enviroment
 
-Run the analysis
+## Run the analysis
 ====
 
 Execute Main.py Example:
